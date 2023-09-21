@@ -40,13 +40,12 @@ public class InvokeHelper extends MethodProvider {
         getBot().getMouseEventHandler().generateBotMouseEvent(
                 event,
                 System.currentTimeMillis(),
-                MouseEvent.BUTTON1_DOWN_MASK,
+                MouseEvent.BUTTON3_DOWN_MASK,
                 screenX, screenY,
-                1, false, MouseEvent.BUTTON1, true);
+                1, false, MouseEvent.BUTTON3, true);
     }
 
     private void sendClick() {
-        getMouse().move(0, 0);
         fireEvent(MouseEvent.MOUSE_PRESSED);
         fireEvent(MouseEvent.MOUSE_RELEASED);
         fireEvent(MouseEvent.MOUSE_CLICKED);
