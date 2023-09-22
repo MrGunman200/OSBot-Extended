@@ -1,4 +1,4 @@
-import api.script.ScriptExtended;
+import api.script.LoopScript;
 import invoking.InvokeHelper;
 import org.osbot.rs07.api.filter.Filter;
 import org.osbot.rs07.api.map.Area;
@@ -9,7 +9,7 @@ import org.osbot.rs07.script.ScriptManifest;
 import util.Sleep;
 
 @ScriptManifest(info = "", logo = "", name = "TestScript", author = "", version = 0.0)
-public class TestScript extends ScriptExtended {
+public class TestScript extends LoopScript {
 
     private final Area chopArea = new Area(3206, 3238, 3184, 3252);
     private final Filter<Item> axeFilter = i -> i != null && i.getName() != null && i.getName().contains("axe");
@@ -18,6 +18,7 @@ public class TestScript extends ScriptExtended {
     public void onStart() throws InterruptedException {
         super.onStart();
         invokeHelper = getHelpers().getInvokeHelper();
+        getScriptSettings().setFpsTarget(3);
     }
 
     public int onLoop() throws InterruptedException {
