@@ -112,6 +112,10 @@ public class InvokeHelper extends MethodProvider {
         return invokeWalking(sceneX, sceneY);
     }
 
+    /**
+     * Use invoke(RS2Widget widget, int index)
+     */
+    @Deprecated
     public boolean invokeDialogue(RS2Widget widget) {
         final int id = 0;
         final int param0 = widget.getThirdLevelId();
@@ -120,20 +124,24 @@ public class InvokeHelper extends MethodProvider {
         return invoke(param0, param1, opcode, id, widget.getItemId());
     }
 
+    @Deprecated
     public boolean invokeDialogue(RS2Widget widget, int opcode, int identifier) {
         final int param0 = widget.getThirdLevelId();
         final int param1 = widget.getId();
         return invoke(param0, param1, opcode, identifier, widget.getItemId());
     }
 
+    @Deprecated
     public boolean invokeDialogue(int widgetIndex, int widgetId) {
         return invoke(widgetIndex, widgetId, MenuAction.WIDGET_CONTINUE.getId(), 0, -1);
     }
 
+    @Deprecated
     public boolean invokeDialogue(int widgetIndex, int widgetId, int itemId) {
         return invoke(widgetIndex, widgetId, MenuAction.WIDGET_CONTINUE.getId(), 0, itemId);
     }
 
+    @Deprecated
     public boolean invokeDialogue(int widgetIndex, int widgetId, int identifier, int itemId) {
         return invoke(widgetIndex, widgetId, MenuAction.WIDGET_CONTINUE.getId(), identifier, itemId);
     }
@@ -172,10 +180,29 @@ public class InvokeHelper extends MethodProvider {
         return invoke(param0, param1, opcode, id, itemId);
     }
 
+    public boolean invoke(RS2Widget widget, String action) {
+        return invoke(widget, getIndexForAction(action, widget.getInteractActions()));
+    }
+
+    public boolean invoke(RS2Widget widget, int index) {
+        final int param0 = widget.getThirdLevelId();
+        final int param1 = widget.getId();
+        final int opcode = getWidgetOpcode(widget, index);
+        final int identifier = getWidgetIdentifier(widget, index);
+        final int itemId = widget.getItemId();
+        return invoke(param0, param1, opcode, identifier, itemId);
+    }
+
     public boolean invoke(RS2Widget widget, int opcode, int identifier) {
         final int param0 = widget.getThirdLevelId();
         final int param1 = widget.getId();
         return invoke(param0, param1, opcode, identifier, widget.getItemId());
+    }
+
+    public boolean invoke(RS2Widget widget, int opcode, int identifier, int itemId) {
+        final int param0 = widget.getThirdLevelId();
+        final int param1 = widget.getId();
+        return invoke(param0, param1, opcode, identifier, itemId);
     }
 
     public boolean invoke(Item item, String action) {
@@ -203,67 +230,15 @@ public class InvokeHelper extends MethodProvider {
         final RS2Widget widget = item.getOwner();
         final int param0 = widget.getThirdLevelId();
         final int param1 = widget.getId();
-        int opcode = -1;
-        int id = -1;
+        int opcode;
+        int id;
 
-        switch (index) {
-            case -5:
-                opcode = MenuAction.WIDGET_TARGET_ON_WIDGET.getId();
-                id = 0;
-                break;
-            case -3:
-                opcode = ItemOpCodes.EXAMINE.getMenuAction().getId();
-                id = ItemOpCodes.EXAMINE.getIdentifier();
-                break;
-            case -2:
-                // I think this is old/outdated I can't remember or find anything with Equip action
-                opcode = ItemOpCodes.EQUIP.getMenuAction().getId();
-                id = ItemOpCodes.EQUIP.getIdentifier();
-                break;
-            case -1:
-                opcode = ItemOpCodes.DROP.getMenuAction().getId();
-                id = ItemOpCodes.DROP.getIdentifier();
-                break;
-            case 0:
-                opcode = ItemOpCodes.FIRST_ACTION.getMenuAction().getId();
-                id = ItemOpCodes.FIRST_ACTION.getIdentifier();
-                break;
-            case 1:
-                opcode = ItemOpCodes.SECOND_ACTION.getMenuAction().getId();
-                id = ItemOpCodes.SECOND_ACTION.getIdentifier();
-                break;
-            case 2:
-                opcode = ItemOpCodes.THIRD_ACTION.getMenuAction().getId();
-                id = ItemOpCodes.THIRD_ACTION.getIdentifier();
-                break;
-            case 3:
-                opcode = ItemOpCodes.FOURTH_ACTION.getMenuAction().getId();
-                id = ItemOpCodes.FOURTH_ACTION.getIdentifier();
-                break;
-            case 4:
-                opcode = ItemOpCodes.FIFTH_ACTION.getMenuAction().getId();
-                id = ItemOpCodes.FIFTH_ACTION.getIdentifier();
-                break;
-            case 5:
-                opcode = ItemOpCodes.SIXTH_ACTION.getMenuAction().getId();
-                id = ItemOpCodes.SIXTH_ACTION.getIdentifier();
-                break;
-            case 6:
-                opcode = ItemOpCodes.SEVENTH_ACTION.getMenuAction().getId();
-                id = ItemOpCodes.SEVENTH_ACTION.getIdentifier();
-                break;
-            case 7:
-                opcode = ItemOpCodes.EIGHTH_ACTION.getMenuAction().getId();
-                id = ItemOpCodes.EIGHTH_ACTION.getIdentifier();
-                break;
-            case 8:
-                opcode = ItemOpCodes.NINTH_ACTION.getMenuAction().getId();
-                id = ItemOpCodes.NINTH_ACTION.getIdentifier();
-                break;
-            case 9:
-                opcode = ItemOpCodes.TENTH_ACTION.getMenuAction().getId();
-                id = ItemOpCodes.TENTH_ACTION.getIdentifier();
-                break;
+        if (index == -5) {
+            opcode = MenuAction.WIDGET_TARGET_ON_WIDGET.getId();
+            id = 0;
+        } else {
+            opcode = getWidgetOpcode(widget, index);
+            id = getWidgetIdentifier(widget, index);
         }
 
         return invoke(param0, param1, opcode, id, item.getId());
@@ -458,6 +433,33 @@ public class InvokeHelper extends MethodProvider {
         }
 
         throw new IndexOutOfBoundsException("Action index couldn't be found");
+    }
+
+    public int getWidgetOpcode(RS2Widget widget, int index) {
+        return getWidgetOpcode(widget.getType(), index, widget.getSelectedActionName());
+    }
+
+    public int getWidgetOpcode(int widgetType, int index, String selectedActionName) {
+        switch (widgetType) {
+            case WidgetType.GRAPHIC:
+                return index < 6 ? MenuAction.CC_OP.getId() : MenuAction.CC_OP_LOW_PRIORITY.getId();
+            case WidgetType.TEXT:
+                return MenuAction.WIDGET_CONTINUE.getId();
+            default:
+                return MenuAction.CC_OP.getId();
+        }
+    }
+
+    public int getWidgetIdentifier(RS2Widget widget, int index) {
+        return getWidgetIdentifier(widget.getType(), index, widget.getSelectedActionName());
+    }
+
+    public int getWidgetIdentifier(int widgetType, int index, String selectedActionName) {
+        if (widgetType == WidgetType.TEXT) {
+            return 0;
+        }
+
+        return index + 1;
     }
 
 }
