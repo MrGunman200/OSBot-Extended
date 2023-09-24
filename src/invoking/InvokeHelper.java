@@ -2,7 +2,12 @@ package invoking;
 
 import org.osbot.rs07.api.map.Area;
 import org.osbot.rs07.api.map.Position;
-import org.osbot.rs07.api.model.*;
+import org.osbot.rs07.api.model.Entity;
+import org.osbot.rs07.api.model.GroundItem;
+import org.osbot.rs07.api.model.Item;
+import org.osbot.rs07.api.model.NPC;
+import org.osbot.rs07.api.model.Player;
+import org.osbot.rs07.api.model.RS2Object;
 import org.osbot.rs07.api.ui.RS2Widget;
 import org.osbot.rs07.script.MethodProvider;
 
@@ -110,6 +115,29 @@ public class InvokeHelper extends MethodProvider {
         final int sceneX = position.getLocalX(getBot());
         final int sceneY = position.getLocalY(getBot());
         return invokeWalking(sceneX, sceneY);
+    }
+
+    /**
+     * Sends a generic close action
+     * Works for Bank, GE, and Dialogue. Doesn't work for windows such as settings window
+     */
+    public boolean invokeCloseWidget() {
+        return invoke(0, 0, MenuAction.WIDGET_CLOSE.getId(), 0, -1);
+    }
+
+    /**
+     * Looks for X button widget and interacts with that
+     */
+    public boolean invokeCloseButton() {
+        final RS2Widget closeButton = getWidgets().getWidgetContainingAction("Close");
+        return closeButton != null && invoke(closeButton, "Close");
+    }
+
+    /**
+     * Mixture of both invokeCloseButton and invokeCloseWidget
+     */
+    public boolean closeInterface() {
+        return invokeCloseButton() || invokeCloseWidget();
     }
 
     /**
