@@ -234,13 +234,7 @@ public class InvokeHelper extends MethodProvider {
     }
 
     public boolean invoke(Item item, String action) {
-        if (action.equalsIgnoreCase("drop")) {
-            return invoke(item, -1);
-        } else if (action.equalsIgnoreCase("equip")) {
-            return invoke(item, -2);
-        } else if (action.equalsIgnoreCase("examine")) {
-            return invoke(item, -3);
-        } else if (action.equalsIgnoreCase("use") || action.equalsIgnoreCase("cast")) {
+        if (action.equalsIgnoreCase("use") || action.equalsIgnoreCase("cast")) {
             return invoke(item, -5);
         }
 
