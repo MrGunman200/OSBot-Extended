@@ -250,7 +250,7 @@ public class InvokeHelper extends MethodProvider {
     public boolean invoke(GroundItem groundItem, int opcode, int identifier)  {
         final int param0 = groundItem.getLocalX();
         final int param1 = groundItem.getLocalY();
-        return invoke(param0, param1, opcode, identifier, -1);
+        return groundItem.exists() && invoke(param0, param1, opcode, identifier, -1);
     }
 
     public boolean invoke(GroundItem groundItem, int index) {
@@ -280,7 +280,7 @@ public class InvokeHelper extends MethodProvider {
                 break;
         }
 
-        return invoke(param0, param1, opcode, id, -1);
+        return groundItem.exists() && invoke(param0, param1, opcode, id, -1);
     }
 
     public boolean invoke(Player player, String action) {
@@ -297,7 +297,7 @@ public class InvokeHelper extends MethodProvider {
     }
 
     public boolean invoke(Player player, int opcode, int identifier) {
-        return invoke(0, 0, opcode, identifier, -1);
+        return player.exists() && invoke(0, 0, opcode, identifier, -1);
     }
 
     public boolean invoke(Player player, int index) {
@@ -342,7 +342,7 @@ public class InvokeHelper extends MethodProvider {
                 break;
         }
 
-        return invoke(param0, param1, opcode, id, -1);
+        return player.exists() && invoke(param0, param1, opcode, id, -1);
     }
 
     public boolean invoke(NPC npc, String action) {
@@ -354,7 +354,7 @@ public class InvokeHelper extends MethodProvider {
     }
 
     public boolean invoke(NPC npc, int opcode, int identifier) {
-        return invoke(0, 0, opcode, identifier, -1);
+        return npc.exists() && invoke(0, 0, opcode, identifier, -1);
     }
 
     public boolean invoke(NPC npc, int index) {
@@ -384,7 +384,7 @@ public class InvokeHelper extends MethodProvider {
                 break;
         }
 
-        return invoke(param0, param1, opcode, id, -1);
+        return npc.exists() && invoke(param0, param1, opcode, id, -1);
     }
 
     public boolean invoke(RS2Object object, String action) {
@@ -398,7 +398,7 @@ public class InvokeHelper extends MethodProvider {
     public boolean invoke(RS2Object object, int opcode, int identifier) {
         final int param0 = object.getLocalX();
         final int param1 = object.getLocalY();
-        return invoke(param0, param1, opcode, identifier, -1);
+        return object.exists() && invoke(param0, param1, opcode, identifier, -1);
     }
 
     public boolean invoke(RS2Object object, int index) {
@@ -428,7 +428,7 @@ public class InvokeHelper extends MethodProvider {
                 break;
         }
 
-        return invoke(param0, param1, opcode, id, -1);
+        return object.exists() && invoke(param0, param1, opcode, id, -1);
     }
 
     public int getIndexForAction(String targetAction, String[] actions) throws IndexOutOfBoundsException {
