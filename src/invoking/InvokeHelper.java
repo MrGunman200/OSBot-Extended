@@ -13,7 +13,7 @@ import org.osbot.rs07.script.MethodProvider;
 
 import java.awt.event.MouseEvent;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "UnusedReturnValue"})
 public class InvokeHelper extends MethodProvider {
 
     public InvokeHelper(MethodProvider context) {
@@ -146,17 +146,8 @@ public class InvokeHelper extends MethodProvider {
     @Deprecated
     public boolean invokeDialogue(RS2Widget widget) {
         final int id = 0;
-        final int param0 = widget.getThirdLevelId();
-        final int param1 = widget.getId();
         final int opcode = MenuAction.WIDGET_CONTINUE.getId();
-        return invoke(param0, param1, opcode, id, widget.getItemId());
-    }
-
-    @Deprecated
-    public boolean invokeDialogue(RS2Widget widget, int opcode, int identifier) {
-        final int param0 = widget.getThirdLevelId();
-        final int param1 = widget.getId();
-        return invoke(param0, param1, opcode, identifier, widget.getItemId());
+        return invoke(widget, opcode, id);
     }
 
     @Deprecated
@@ -191,34 +182,37 @@ public class InvokeHelper extends MethodProvider {
     }
 
     public boolean invokeOn(RS2Widget widget, RS2Widget otherWidget) {
+        return invokeUse(widget) && invokeOn(otherWidget);
+    }
+
+    public boolean invokeOn(RS2Widget otherWidget) {
         final int id = 0;
-        final int param0 = otherWidget.getThirdLevelId();
-        final int param1 = otherWidget.getId();
         final int opcode = MenuAction.WIDGET_TARGET_ON_WIDGET.getId();
-        final int itemId = otherWidget.getItemId();
-        return invokeUse(widget) && invoke(param0, param1, opcode, id, itemId);
+        return invoke(otherWidget, opcode, id);
     }
 
     public boolean invokeUse(RS2Widget widget) {
         final int id = 0;
-        final int param0 = widget.getThirdLevelId();
-        final int param1 = widget.getId();
         final int opcode = MenuAction.WIDGET_TARGET.getId();
-        final int itemId = widget.getItemId();
-        return invoke(param0, param1, opcode, id, itemId);
+        return invoke(widget, opcode, id);
     }
 
     public boolean invoke(RS2Widget widget, String action) {
+        if (action.equalsIgnoreCase("use") || action.equalsIgnoreCase("cast")) {
+            if (getInventory().isItemSelected() || getMagic().isSpellSelected()) {
+                return invokeOn(widget);
+            }
+
+            return invokeUse(widget);
+        }
+
         return invoke(widget, getIndexForAction(action, widget.getInteractActions()));
     }
 
     public boolean invoke(RS2Widget widget, int index) {
-        final int param0 = widget.getThirdLevelId();
-        final int param1 = widget.getId();
         final int opcode = getWidgetOpcode(widget, index);
         final int identifier = getWidgetIdentifier(widget, index);
-        final int itemId = widget.getItemId();
-        return invoke(param0, param1, opcode, identifier, itemId);
+        return invoke(widget, opcode, identifier);
     }
 
     public boolean invoke(RS2Widget widget, int opcode, int identifier) {
@@ -234,39 +228,22 @@ public class InvokeHelper extends MethodProvider {
     }
 
     public boolean invoke(Item item, String action) {
-        if (action.equalsIgnoreCase("use") || action.equalsIgnoreCase("cast")) {
-            return invoke(item, -5);
-        }
-
-        return invoke(item, getIndexForAction(action, item.getOwner().getInteractActions()));
+        return invoke(item.getOwner(), action);
     }
 
     public boolean invoke(Item item, int opcode, int identifier) {
-        final RS2Widget widget = item.getOwner();
-        final int param0 = widget.getThirdLevelId();
-        final int param1 = widget.getId();
-        return invoke(param0, param1, opcode, identifier, -1);
+        return invoke(item.getOwner(), opcode, identifier);
     }
 
     public boolean invoke(Item item, int index) {
-        final RS2Widget widget = item.getOwner();
-        final int param0 = widget.getThirdLevelId();
-        final int param1 = widget.getId();
-        int opcode;
-        int id;
-
-        if (index == -5) {
-            opcode = MenuAction.WIDGET_TARGET_ON_WIDGET.getId();
-            id = 0;
-        } else {
-            opcode = getWidgetOpcode(widget, index);
-            id = getWidgetIdentifier(widget, index);
-        }
-
-        return invoke(param0, param1, opcode, id, item.getId());
+        return invoke(item.getOwner(), index);
     }
 
     public boolean invoke(GroundItem groundItem, String action) {
+        if (action.equalsIgnoreCase("use") || action.equalsIgnoreCase("cast")) {
+            return invoke(groundItem, -5);
+        }
+
         return invoke(groundItem, getIndexForAction(action, groundItem.getActions()));
     }
 
@@ -312,6 +289,8 @@ public class InvokeHelper extends MethodProvider {
             return invoke(player, -2);
         } else if (action.equalsIgnoreCase("follow")) {
             return invoke(player, -3);
+        } else if (action.equalsIgnoreCase("use") || action.equalsIgnoreCase("cast")) {
+            return invoke(player, -5);
         }
 
         return invoke(player, getIndexForAction(action, player.getActions()));
@@ -367,6 +346,10 @@ public class InvokeHelper extends MethodProvider {
     }
 
     public boolean invoke(NPC npc, String action) {
+        if (action.equalsIgnoreCase("use") || action.equalsIgnoreCase("cast")) {
+            return invoke(npc, -5);
+        }
+
         return invoke(npc, getIndexForAction(action, npc.getActions()));
     }
 
@@ -405,6 +388,10 @@ public class InvokeHelper extends MethodProvider {
     }
 
     public boolean invoke(RS2Object object, String action) {
+        if (action.equalsIgnoreCase("use") || action.equalsIgnoreCase("cast")) {
+            return invoke(object, -5);
+        }
+
         return invoke(object, getIndexForAction(action, object.getActions()));
     }
 
