@@ -73,7 +73,7 @@ public class InvokeHelper extends MethodProvider {
                 sendClick();
             }
 
-            getClient().accessor.invokeMenuAction(param0, param1, opcode, id, itemId, action, targetName, screenX, screenY);
+            getMenuAPI().invokeMenuAction(param0, param1, opcode, id, itemId, action, targetName, screenX, screenY);
             return true;
         } catch (Exception | Error e) {
             e.printStackTrace();
