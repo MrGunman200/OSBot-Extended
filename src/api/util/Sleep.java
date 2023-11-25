@@ -1,4 +1,4 @@
-package util;
+package api.util;
 
 import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
@@ -23,10 +23,6 @@ public class Sleep {
     }
 
     public static boolean sleepUntil(BooleanSupplier condition, int timeout, int polling) {
-        return sleepUntil(condition, ()-> false, timeout, polling);
-    }
-
-    public static boolean sleepUntil(int timeout, BooleanSupplier condition, int polling) {
         return sleepUntil(condition, ()-> false, timeout, polling);
     }
 

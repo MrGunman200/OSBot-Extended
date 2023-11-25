@@ -1,15 +1,18 @@
-import api.script.LoopScript;
-import invoking.InvokeHelper;
+package examples;
+
+import api.invoking.InvokeHelper;
+import api.movement.Reachable;
 import org.osbot.rs07.api.filter.Filter;
 import org.osbot.rs07.api.map.Area;
 import org.osbot.rs07.api.model.Item;
 import org.osbot.rs07.api.model.RS2Object;
 import org.osbot.rs07.api.ui.Skill;
+import org.osbot.rs07.script.Script;
 import org.osbot.rs07.script.ScriptManifest;
-import util.Sleep;
+import api.util.Sleep;
 
-@ScriptManifest(info = "", logo = "", name = "TestScript", author = "", version = 0.0)
-public class TestScript extends LoopScript {
+@ScriptManifest(info = "", logo = "", name = "ExampleScript", author = "", version = 0.0)
+public class ExampleScript extends Script {
 
     private final Area chopArea = new Area(3206, 3238, 3184, 3252);
     private final Filter<Item> axeFilter = i -> i != null && i.getName() != null && i.getName().contains("axe");
@@ -17,8 +20,7 @@ public class TestScript extends LoopScript {
 
     public void onStart() throws InterruptedException {
         super.onStart();
-        invokeHelper = getHelpers().getInvokeHelper();
-        getScriptSettings().setFpsTarget(3);
+        invokeHelper = new InvokeHelper(this);
     }
 
     public int onLoop() throws InterruptedException {
@@ -44,6 +46,7 @@ public class TestScript extends LoopScript {
                 && o.getName() != null
                 && o.getName().equals(treeName)
                 && chopArea.contains(o.getPosition())
+                && Reachable.canReach(this, o)
         );
     }
 
