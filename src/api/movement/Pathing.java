@@ -218,6 +218,11 @@ public class Pathing {
 
     public static boolean canPath(MethodProvider mp, Position start, Position end)
     {
+        if (start.getZ() != end.getZ())
+        {
+            return false;
+        }
+
         final List<Position> path = pathTo(mp, start, end);
         return path != null && path.contains(end);
     }
