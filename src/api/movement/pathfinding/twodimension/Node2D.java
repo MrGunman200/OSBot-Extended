@@ -16,8 +16,8 @@ public class Node2D
     public final int y;
     public final int z;
     public final int hops;
-    public final double euclidDist;
-    public final double cost;
+    public final float euclidDist;
+    public final float cost;
 
     public Node2D (Node2D previous, Area target, int x, int y, int z, int hops)
     {
@@ -52,7 +52,7 @@ public class Node2D
 
     public int compareTo(Node2D other)
     {
-        return Double.compare(this.cost, other.cost);
+        return Float.compare(this.cost, other.cost);
     }
 
 }

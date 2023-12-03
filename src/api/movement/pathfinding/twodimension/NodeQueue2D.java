@@ -10,7 +10,7 @@ import java.util.NoSuchElementException;
 public class NodeQueue2D
 {
 
-    private static final int INITIAL_CAPACITY = 32;
+    private static final short INITIAL_CAPACITY = 32;
     private int size;
     private Node2D[] elements;
 
@@ -18,11 +18,6 @@ public class NodeQueue2D
     {
         this.elements = new Node2D[INITIAL_CAPACITY];
         this.size = 0;
-    }
-
-    public int size()
-    {
-        return this.size;
     }
 
     public void addAll(List<Node2D> node2DS)

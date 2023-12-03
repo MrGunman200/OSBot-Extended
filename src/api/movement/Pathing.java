@@ -197,9 +197,9 @@ public class Pathing {
      */
     public static List<Position> pathTo(MethodProvider mp, Position startTile, Position endTile)
     {
-        if (mp == null || startTile == null || endTile == null)
+        if (mp == null || startTile == null || endTile == null || startTile.getZ() != endTile.getZ())
         {
-            return null;
+            return new ArrayList<>();
         }
 
         final Area target = new Area(endTile, endTile);
@@ -218,13 +218,7 @@ public class Pathing {
 
     public static boolean canPath(MethodProvider mp, Position start, Position end)
     {
-        if (start.getZ() != end.getZ())
-        {
-            return false;
-        }
-
-        final List<Position> path = pathTo(mp, start, end);
-        return path != null && path.contains(end);
+        return pathTo(mp, start, end).contains(end);
     }
 
 }

@@ -21,61 +21,70 @@ public class Pathfinder2D implements Callable<List<Position>>
     private final List<Node2D> start;
     private final Area target;
     private final NodeQueue2D boundary = new NodeQueue2D();
-    private final Set<BasicPosition> visited = new HashSet<>();
+    private final Set<Integer> visited = new HashSet<>();
     private Node2D nearest;
-    private double bestDistance = Double.MAX_VALUE;
+    private float bestDistance = Float.MAX_VALUE;
 
     public Pathfinder2D(CollisionMap collisionMap, List<Position> start, Area target)
     {
         this.map = collisionMap;
         this.target = target;
-        this.start = new ArrayList<>();
-        this.start.addAll(start.stream().map(point -> new Node2D(null, target, point.getX(), point.getY(), point.getZ(), 0)).collect(Collectors.toList()));
+        this.start = start.stream().map(point -> new Node2D(null, target, point.getX(), point.getY(), point.getZ(), 0)).collect(Collectors.toList());
         this.nearest = null;
     }
 
     private void addNeighbors(Node2D node2D)
     {
-        int x = node2D.x;
-        int y = node2D.y;
-        int plane = node2D.z;
+        final int x = node2D.x;
+        final int y = node2D.y;
+        final int plane = node2D.z;
 
-        if (map.w(x, y, plane))
+        final boolean canWest = map.w(x, y, plane);
+        final boolean canEast = map.e(x, y, plane);
+        final boolean canSouth = map.s(x, y, plane);
+        final boolean canNorth = map.n(x, y, plane);
+
+        final boolean canSouthWest = (canSouth || canWest) && map.sw(x, y, plane);
+        final boolean canSouthEast = (canSouth || canEast) && map.se(x, y, plane);
+        final boolean canNorthWest = (canNorth || canWest) && map.nw(x, y, plane);
+        final boolean canNorthEast = (canNorth || canEast) && map.ne(x, y, plane);
+
+        if (canWest)
         {
             addNeighbor(node2D, x - 1, y, plane);
         }
 
-        if (map.e(x, y, plane))
+        if (canEast)
         {
             addNeighbor(node2D, x + 1, y, plane);
         }
 
-        if (map.s(x, y, plane))
+        if (canSouth)
         {
             addNeighbor(node2D, x, y - 1, plane);
         }
 
-        if (map.n(x, y, plane))
+        if (canNorth)
         {
             addNeighbor(node2D, x, y + 1, plane);
         }
 
-        if (map.sw(x, y, plane))
+        if (canSouthWest)
         {
             addNeighbor(node2D, x - 1, y - 1, plane);
         }
 
-        if (map.se(x, y, plane))
+        if (canSouthEast)
         {
             addNeighbor(node2D, x + 1, y - 1, plane);
         }
 
-        if (map.nw(x, y, plane))
+        if (canNorthWest)
         {
             addNeighbor(node2D, x - 1, y + 1, plane);
         }
 
-        if (map.ne(x, y, plane))
+        if (canNorthEast)
         {
             addNeighbor(node2D, x + 1, y + 1, plane);
         }
@@ -84,14 +93,16 @@ public class Pathfinder2D implements Callable<List<Position>>
 
     private void addNeighbor(Node2D node2D, int x, int y, int z)
     {
-        final BasicPosition p = new BasicPosition(x, y, z);
 
-        if (!visited.add(p))
+        // 15001 is just a prime number above the theoretical max x and y we're using for hashing
+        final int hash = x + 15001 * y + 15001 * 15001 * z;
+
+        if (!visited.add(hash))
         {
             return;
         }
 
-        final double distance = node2D.euclidDist;
+        final float distance = node2D.euclidDist;
         final int hops = node2D.hops + 1;
 
         if (distance < bestDistance)
@@ -117,6 +128,7 @@ public class Pathfinder2D implements Callable<List<Position>>
 
         while (!boundary.isEmpty())
         {
+            /* Don't think these are needed?
             if (Thread.interrupted())
             {
                 return new ArrayList<>();
@@ -126,6 +138,7 @@ public class Pathfinder2D implements Callable<List<Position>>
             {
                 return nearest.path();
             }
+             */
 
             final Node2D node2D = boundary.poll();
 
