@@ -58,7 +58,7 @@ public abstract class ExtraProvider extends Script {
             return result;
         };
 
-        Sleep.sleepUntil(breakSupplier, resetSupplier, 2_400, 10);
+        Sleep.until(breakSupplier, resetSupplier, 2_400, 10);
     }
 
 }

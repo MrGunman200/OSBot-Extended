@@ -102,7 +102,7 @@ public class Pathfinder2D implements Callable<List<Position>>
             return;
         }
 
-        final float distance = node2D.euclidDist;
+        final float distance = node2D.distance;
         final int hops = node2D.hops + 1;
 
         if (distance < bestDistance)
@@ -142,7 +142,7 @@ public class Pathfinder2D implements Callable<List<Position>>
 
             final Node2D node2D = boundary.poll();
 
-            if (node2D.euclidDist == 0.00)
+            if (node2D.distance == 0.00)
             {
                 return node2D.path();
             }

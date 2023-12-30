@@ -16,7 +16,7 @@ public class Node2D
     public final int y;
     public final int z;
     public final int hops;
-    public final float euclidDist;
+    public final float distance;
     public final float cost;
 
     public Node2D (Node2D previous, Area target, int x, int y, int z, int hops)
@@ -32,8 +32,8 @@ public class Node2D
         final int xdif = Math.abs(x - p.x);
         final int ydif = Math.abs(y - p.y);
 
-        euclidDist = xdif + ydif;
-        cost = euclidDist + hops;
+        distance = xdif + ydif;
+        cost = distance + hops;
     }
 
     public List<Position> path()

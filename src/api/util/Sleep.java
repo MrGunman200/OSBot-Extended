@@ -18,23 +18,23 @@ public class Sleep {
         }
     }
 
-    public static boolean sleepUntil(BooleanSupplier condition, int timeout) {
-        return sleepUntil(condition, ()-> false, timeout, DEFAULT_POLLING);
+    public static boolean until(BooleanSupplier condition, int timeout) {
+        return until(condition, ()-> false, timeout, DEFAULT_POLLING);
     }
 
-    public static boolean sleepUntil(BooleanSupplier condition, int timeout, int polling) {
-        return sleepUntil(condition, ()-> false, timeout, polling);
+    public static boolean until(BooleanSupplier condition, int timeout, int polling) {
+        return until(condition, ()-> false, timeout, polling);
     }
 
-    public static boolean sleepUntil(BooleanSupplier condition, BooleanSupplier resetCondition, int timeout) {
-        return sleepUntil(condition, resetCondition, timeout, DEFAULT_POLLING, DEFAULT_CYCLE_LIMIT);
+    public static boolean until(BooleanSupplier condition, BooleanSupplier resetCondition, int timeout) {
+        return until(condition, resetCondition, timeout, DEFAULT_POLLING, DEFAULT_CYCLE_LIMIT);
     }
 
-    public static boolean sleepUntil(BooleanSupplier condition, BooleanSupplier resetCondition, int timeout, int polling) {
-        return sleepUntil(condition, resetCondition, timeout, polling, DEFAULT_CYCLE_LIMIT);
+    public static boolean until(BooleanSupplier condition, BooleanSupplier resetCondition, int timeout, int polling) {
+        return until(condition, resetCondition, timeout, polling, DEFAULT_CYCLE_LIMIT);
     }
 
-    public static boolean sleepUntil(BooleanSupplier condition, BooleanSupplier resetCondition, int timeout, int polling, int cycleLimit) {
+    public static boolean until(BooleanSupplier condition, BooleanSupplier resetCondition, int timeout, int polling, int cycleLimit) {
         try {
             int resetCounter = 0;
             long startTime = System.currentTimeMillis();

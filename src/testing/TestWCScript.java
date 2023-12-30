@@ -7,7 +7,6 @@ import org.osbot.rs07.api.map.Area;
 import org.osbot.rs07.api.model.Item;
 import org.osbot.rs07.api.model.RS2Object;
 import org.osbot.rs07.api.ui.Skill;
-import org.osbot.rs07.script.ScriptManifest;
 import testing.api.script.LoopScript;
 import api.util.Sleep;
 
@@ -69,7 +68,7 @@ public class TestWCScript extends LoopScript {
 
     private void chopTree(RS2Object tree) {
         if (invokeHelper.invoke(tree, "Chop down")) {
-            Sleep.sleepUntil(()-> !tree.exists(), ()-> myPlayer().isAnimating(), 1_800);
+            Sleep.until(()-> !tree.exists(), ()-> myPlayer().isAnimating(), 1_800);
         }
     }
 

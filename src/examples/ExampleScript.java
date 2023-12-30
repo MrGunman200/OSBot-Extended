@@ -68,7 +68,7 @@ public class ExampleScript extends Script {
 
     private void chopTree(RS2Object tree) {
         if (invokeHelper.invoke(tree, "Chop down")) {
-            Sleep.sleepUntil(()-> !tree.exists(), ()-> myPlayer().isAnimating(), 1_800);
+            Sleep.until(()-> !tree.exists(), ()-> myPlayer().isAnimating(), 1_800);
         }
     }
 
