@@ -1,19 +1,8 @@
-package testing;
+package experimental;
 
-import api.movement.Pathing;
-import org.osbot.rs07.api.Client;
 import org.osbot.rs07.api.map.Position;
-import org.osbot.rs07.api.model.*;
-import org.osbot.rs07.api.ui.RS2Widget;
-import org.osbot.rs07.api.ui.Tab;
-import org.osbot.rs07.event.WebWalkEvent;
-import org.osbot.rs07.event.webwalk.PathPreferenceProfile;
-import org.osbot.rs07.input.mouse.EntityDestination;
-import org.osbot.rs07.input.mouse.MouseDestination;
-import org.osbot.rs07.script.RandomEvent;
-import org.osbot.rs07.script.RandomSolver;
 import org.osbot.rs07.script.ScriptManifest;
-import testing.api.script.LoopScript;
+import experimental.api.script.LoopScript;
 
 //@ScriptManifest(info = "", logo = "", name = "TestScript", author = "", version = 0.0)
 public class TestScript extends LoopScript {

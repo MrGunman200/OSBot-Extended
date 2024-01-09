@@ -1,4 +1,4 @@
-package testing.api.provider;
+package experimental.api.provider;
 
 import api.invoking.InvokeHelper;
 import org.osbot.rs07.script.Script;

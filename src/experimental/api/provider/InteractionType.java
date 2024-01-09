@@ -1,4 +1,4 @@
-package testing.api.provider;
+package experimental.api.provider;
 
 public enum InteractionType {
     DEFAULT(),

@@ -1,4 +1,4 @@
-package testing;
+package experimental;
 
 import api.invoking.InvokeHelper;
 import api.movement.Reachable;
@@ -7,7 +7,7 @@ import org.osbot.rs07.api.map.Area;
 import org.osbot.rs07.api.model.Item;
 import org.osbot.rs07.api.model.RS2Object;
 import org.osbot.rs07.api.ui.Skill;
-import testing.api.script.LoopScript;
+import experimental.api.script.LoopScript;
 import api.util.Sleep;
 
 //@ScriptManifest(info = "", logo = "", name = "TestWCScript", author = "", version = 0.0)
@@ -20,7 +20,7 @@ public class TestWCScript extends LoopScript {
     public void onStart() throws InterruptedException {
         super.onStart();
         invokeHelper = getHelpers().getInvokeHelper();
-        getExtraVars().setFpsTarget(3);
+        getExtraBot().setFpsTarget(3);
     }
 
     public int onLoop() throws InterruptedException {

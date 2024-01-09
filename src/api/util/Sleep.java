@@ -1,5 +1,7 @@
 package api.util;
 
+import experimental.api.provider.ExtraProviders;
+
 import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
 
@@ -15,6 +17,26 @@ public class Sleep {
             // I don't wanna deal with Interrupted Exception handling everywhere
             // but I need it to reset the execution when it happens
             throw new IndexOutOfBoundsException("Sleep Interrupted*");
+        }
+    }
+
+    /**
+     * Only works when using ExtraProvider
+     */
+    public static void sleepTick() {
+        sleepTicks(1);
+    }
+
+    /**
+     * Only works when using ExtraProvider
+     */
+    public static void sleepTicks(int ticks) {
+        try {
+            ExtraProviders.getContext().sleepTicks(ticks);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Sleep Ticks only works when using ExtraProvider...");
+            sleep(20);
         }
     }
 
@@ -48,6 +70,54 @@ public class Sleep {
                 }
 
                 Sleep.sleep(polling);
+            }
+
+            return condition.getAsBoolean();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    /**
+     * Only works when using ExtraProvider
+     */
+    public static boolean untilTick(BooleanSupplier condition, int timeout) {
+        return untilTick(condition, ()-> false, timeout);
+    }
+
+    /**
+     * Only works when using ExtraProvider
+     */
+    public static boolean untilTick(int timeout, BooleanSupplier condition) {
+        return untilTick(condition, ()-> false, timeout);
+    }
+
+    /**
+     * Only works when using ExtraProvider
+     */
+    public static boolean untilTick(BooleanSupplier condition, BooleanSupplier resetCondition, int timeout) {
+        return untilTick(condition, resetCondition, timeout, DEFAULT_CYCLE_LIMIT);
+    }
+
+    /**
+     * Only works when using ExtraProvider
+     */
+    public static boolean untilTick(BooleanSupplier condition, BooleanSupplier resetCondition, int timeout, int cycleLimit) {
+        try {
+            int resetCounter = 0;
+            long startTime = System.currentTimeMillis();
+
+            while ((System.currentTimeMillis() - startTime) < timeout && !condition.getAsBoolean()) {
+                if (resetCounter >= cycleLimit) {
+                    break;
+                } else if (resetCondition.getAsBoolean()) {
+                    startTime = System.currentTimeMillis();
+                    resetCounter ++;
+                }
+
+                sleepTick();
             }
 
             return condition.getAsBoolean();

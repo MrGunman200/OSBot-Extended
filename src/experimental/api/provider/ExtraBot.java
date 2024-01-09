@@ -1,6 +1,6 @@
-package testing.api.provider;
+package experimental.api.provider;
 
-public class ExtraVars {
+public class ExtraBot {
 
     private InteractionType interactionType = InteractionType.DEFAULT;
     private long gameTick = 0;
