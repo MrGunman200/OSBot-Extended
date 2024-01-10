@@ -1,5 +1,6 @@
 package experimental;
 
+import api.invoking.InvokeHelper;
 import org.osbot.rs07.api.map.Position;
 import org.osbot.rs07.script.ScriptManifest;
 import experimental.api.script.LoopScript;

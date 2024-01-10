@@ -165,6 +165,10 @@ public class InvokeHelper extends MethodProvider {
         return invoke(widgetIndex, widgetId, MenuAction.WIDGET_CONTINUE.getId(), identifier, itemId);
     }
 
+    public boolean invokeOn(RS2Widget widget, Entity entity) {
+        return invokeUse(widget) && invoke(entity, -5);
+    }
+
     public boolean invokeOn(RS2Widget widget, GroundItem groundItem) {
         return invokeUse(widget) && invoke(groundItem, -5);
     }
@@ -237,6 +241,48 @@ public class InvokeHelper extends MethodProvider {
 
     public boolean invoke(Item item, int index) {
         return invoke(item.getOwner(), index);
+    }
+
+    public boolean invoke(Entity entity, String action) {
+        if (entity instanceof RS2Object) {
+            return invoke((RS2Object) entity, action);
+        } else if (entity instanceof NPC) {
+            return invoke((NPC) entity, action);
+        } else if (entity instanceof Player) {
+            return invoke((Player) entity, action);
+        } else if (entity instanceof GroundItem) {
+            return invoke((GroundItem) entity, action);
+        }
+
+        return false;
+    }
+
+    public boolean invoke(Entity entity, int opcode, int identifier) {
+        if (entity instanceof RS2Object) {
+            return invoke((RS2Object) entity, opcode, identifier);
+        } else if (entity instanceof NPC) {
+            return invoke((NPC) entity, opcode, identifier);
+        } else if (entity instanceof Player) {
+            return invoke((Player) entity, opcode, identifier);
+        } else if (entity instanceof GroundItem) {
+            return invoke((GroundItem) entity, opcode, identifier);
+        }
+
+        return false;
+    }
+
+    public boolean invoke(Entity entity, int index) {
+        if (entity instanceof RS2Object) {
+            return invoke((RS2Object) entity, index);
+        } else if (entity instanceof NPC) {
+            return invoke((NPC) entity, index);
+        } else if (entity instanceof Player) {
+            return invoke((Player) entity, index);
+        } else if (entity instanceof GroundItem) {
+            return invoke((GroundItem) entity, index);
+        }
+
+        return false;
     }
 
     public boolean invoke(GroundItem groundItem, String action) {
