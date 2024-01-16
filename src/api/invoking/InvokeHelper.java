@@ -140,49 +140,8 @@ public class InvokeHelper extends MethodProvider {
         return invokeCloseButton() || invokeCloseWidget();
     }
 
-    /**
-     * Use invoke(RS2Widget widget, int index)
-     */
-    @Deprecated
-    public boolean invokeDialogue(RS2Widget widget) {
-        final int id = 0;
-        final int opcode = MenuAction.WIDGET_CONTINUE.getId();
-        return invoke(widget, opcode, id);
-    }
-
-    @Deprecated
-    public boolean invokeDialogue(int widgetIndex, int widgetId) {
-        return invoke(widgetIndex, widgetId, MenuAction.WIDGET_CONTINUE.getId(), 0, -1);
-    }
-
-    @Deprecated
-    public boolean invokeDialogue(int widgetIndex, int widgetId, int itemId) {
-        return invoke(widgetIndex, widgetId, MenuAction.WIDGET_CONTINUE.getId(), 0, itemId);
-    }
-
-    @Deprecated
-    public boolean invokeDialogue(int widgetIndex, int widgetId, int identifier, int itemId) {
-        return invoke(widgetIndex, widgetId, MenuAction.WIDGET_CONTINUE.getId(), identifier, itemId);
-    }
-
     public boolean invokeOn(RS2Widget widget, Entity entity) {
         return invokeUse(widget) && invoke(entity, -5);
-    }
-
-    public boolean invokeOn(RS2Widget widget, GroundItem groundItem) {
-        return invokeUse(widget) && invoke(groundItem, -5);
-    }
-
-    public boolean invokeOn(RS2Widget widget, RS2Object object) {
-        return invokeUse(widget) && invoke(object, -5);
-    }
-
-    public boolean invokeOn(RS2Widget widget, NPC npc) {
-        return invokeUse(widget) && invoke(npc, -5);
-    }
-
-    public boolean invokeOn(RS2Widget widget, Player player) {
-        return invokeUse(widget) && invoke(player, -5);
     }
 
     public boolean invokeOn(RS2Widget widget, RS2Widget otherWidget) {
@@ -210,7 +169,8 @@ public class InvokeHelper extends MethodProvider {
             return invokeUse(widget);
         }
 
-        return invoke(widget, getIndexForAction(action, widget.getInteractActions()));
+        final String[] widgetActions = widget.getInteractActions();
+        return hasActions(widgetActions) && invoke(widget, getIndexForAction(action, widgetActions));
     }
 
     public boolean invoke(RS2Widget widget, int index) {
@@ -285,7 +245,7 @@ public class InvokeHelper extends MethodProvider {
         return false;
     }
 
-    public boolean invoke(GroundItem groundItem, String action) {
+    private boolean invoke(GroundItem groundItem, String action) {
         if (action.equalsIgnoreCase("use") || action.equalsIgnoreCase("cast")) {
             return invoke(groundItem, -5);
         }
@@ -293,13 +253,13 @@ public class InvokeHelper extends MethodProvider {
         return invoke(groundItem, getIndexForAction(action, groundItem.getActions()));
     }
 
-    public boolean invoke(GroundItem groundItem, int opcode, int identifier)  {
+    private boolean invoke(GroundItem groundItem, int opcode, int identifier)  {
         final int param0 = groundItem.getLocalX();
         final int param1 = groundItem.getLocalY();
         return groundItem.exists() && invoke(param0, param1, opcode, identifier, -1);
     }
 
-    public boolean invoke(GroundItem groundItem, int index) {
+    private boolean invoke(GroundItem groundItem, int index) {
         final int id = groundItem.getId();
         final int param0 = groundItem.getLocalX();
         final int param1 = groundItem.getLocalY();
@@ -329,7 +289,7 @@ public class InvokeHelper extends MethodProvider {
         return groundItem.exists() && invoke(param0, param1, opcode, id, -1);
     }
 
-    public boolean invoke(Player player, String action) {
+    private boolean invoke(Player player, String action) {
         // These actions are independent of getActions
         if (action.equalsIgnoreCase("trade")) {
             return invoke(player, -2);
@@ -342,11 +302,11 @@ public class InvokeHelper extends MethodProvider {
         return invoke(player, getIndexForAction(action, player.getActions()));
     }
 
-    public boolean invoke(Player player, int opcode, int identifier) {
+    private boolean invoke(Player player, int opcode, int identifier) {
         return player.exists() && invoke(0, 0, opcode, identifier, -1);
     }
 
-    public boolean invoke(Player player, int index) {
+    private boolean invoke(Player player, int index) {
         final int id = player.getId();
         final int param0 = 0;
         final int param1 = 0;
@@ -391,7 +351,7 @@ public class InvokeHelper extends MethodProvider {
         return player.exists() && invoke(param0, param1, opcode, id, -1);
     }
 
-    public boolean invoke(NPC npc, String action) {
+    private boolean invoke(NPC npc, String action) {
         if (action.equalsIgnoreCase("use") || action.equalsIgnoreCase("cast")) {
             return invoke(npc, -5);
         }
@@ -399,11 +359,11 @@ public class InvokeHelper extends MethodProvider {
         return invoke(npc, getIndexForAction(action, npc.getActions()));
     }
 
-    public boolean invoke(NPC npc, int opcode, int identifier) {
+    private boolean invoke(NPC npc, int opcode, int identifier) {
         return npc.exists() && invoke(0, 0, opcode, identifier, -1);
     }
 
-    public boolean invoke(NPC npc, int index) {
+    private boolean invoke(NPC npc, int index) {
         final int id = npc.getIndex();
         final int param0 = 0;
         final int param1 = 0;
@@ -433,7 +393,7 @@ public class InvokeHelper extends MethodProvider {
         return npc.exists() && invoke(param0, param1, opcode, id, -1);
     }
 
-    public boolean invoke(RS2Object object, String action) {
+    private boolean invoke(RS2Object object, String action) {
         if (action.equalsIgnoreCase("use") || action.equalsIgnoreCase("cast")) {
             return invoke(object, -5);
         }
@@ -441,13 +401,13 @@ public class InvokeHelper extends MethodProvider {
         return invoke(object, getIndexForAction(action, object.getActions()));
     }
 
-    public boolean invoke(RS2Object object, int opcode, int identifier) {
+    private boolean invoke(RS2Object object, int opcode, int identifier) {
         final int param0 = object.getLocalX();
         final int param1 = object.getLocalY();
         return object.exists() && invoke(param0, param1, opcode, identifier, -1);
     }
 
-    public boolean invoke(RS2Object object, int index) {
+    private boolean invoke(RS2Object object, int index) {
         final int id = object.getId();
         final int param0 = object.getLocalX();
         final int param1 = object.getLocalY();
@@ -477,12 +437,18 @@ public class InvokeHelper extends MethodProvider {
         return object.exists() && invoke(param0, param1, opcode, id, -1);
     }
 
+    public boolean hasActions(String[] actions) {
+        return actions != null && actions.length > 0;
+    }
+
     public int getIndexForAction(String targetAction, String[] actions) throws IndexOutOfBoundsException {
-        for (int i = 0; i < actions.length; i++) {
-            final String action = actions[i];
-            if (action != null) {
-                if (action.equals(targetAction)) {
-                    return i;
+        if (hasActions(actions)) {
+            for (int i = 0; i < actions.length; i++) {
+                final String action = actions[i];
+                if (action != null) {
+                    if (action.equals(targetAction)) {
+                        return i;
+                    }
                 }
             }
         }

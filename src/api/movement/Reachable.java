@@ -8,6 +8,7 @@ import org.osbot.rs07.script.MethodProvider;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Reachable
@@ -49,9 +50,21 @@ public class Reachable
 
         final Area meleeArea = AreaUtils.getMeleeArea(area);
         final List<Position> meleePoints = meleeArea.getPositions();
-        final List<Position> clone = new ArrayList<>(meleePoints);
+        final int width = AreaUtils.getAreaWidth(meleeArea) - 1;
+        final int height = AreaUtils.getAreaHeight(meleeArea) - 1;
+        final int startX = meleePoints.get(0).getX();
+        final int startY = meleePoints.get(0).getY();
+        final int plane = meleeArea.getPlane();
 
-        for (Position point : clone)
+        // Remove corners of melee area
+        meleePoints.removeAll(Arrays.asList(
+                new Position(startX, startY, plane),
+                new Position(startX, startY + height, plane),
+                new Position(startX + width, startY, plane),
+                new Position(startX + width, startY + height, plane)
+        ));
+
+        for (Position point : new ArrayList<>(meleePoints))
         {
             final Area pArea = point.getArea(0);
             final Point p5 = AreaUtils.getComparisonPoint(area, pArea);

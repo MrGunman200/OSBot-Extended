@@ -1,14 +1,28 @@
 package experimental;
 
 import api.invoking.InvokeHelper;
+import api.movement.Reachable;
 import org.osbot.rs07.api.map.Position;
+import org.osbot.rs07.api.model.NPC;
+import org.osbot.rs07.api.model.RS2Object;
+import org.osbot.rs07.event.InteractionEvent;
 import org.osbot.rs07.script.ScriptManifest;
 import experimental.api.script.LoopScript;
 
-//@ScriptManifest(info = "", logo = "", name = "TestScript", author = "", version = 0.0)
+import java.util.Arrays;
+
+@ScriptManifest(info = "", logo = "", name = "TestScript", author = "", version = 0.0)
 public class TestScript extends LoopScript {
 
     public int onLoop() throws InterruptedException {
+
+        getCamera().setUseMouse(true);
+
+        final RS2Object e = getObjects().closest("Tree");
+        final InteractionEvent event = new InteractionEvent(e, "Examine");
+        //e.interact("Examine");
+        event.setWalkTo(false);
+        execute(event).hasFinished();
 
 /*
         try {

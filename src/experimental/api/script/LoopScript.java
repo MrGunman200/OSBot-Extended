@@ -23,6 +23,10 @@ public abstract class LoopScript extends ExtraProvider {
         MethodProviders.register(getBot().getScriptExecutor(), this);
         ExtraProviders.register(Thread.currentThread(), this);
         MethodProviders.register(Thread.currentThread(), this);
+        getBot().onGameThread(()-> {
+            ExtraProviders.register(Thread.currentThread(), this);
+            MethodProviders.register(Thread.currentThread(), this);
+        });
     }
 
     @Override
