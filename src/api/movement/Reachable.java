@@ -14,32 +14,45 @@ import java.util.List;
 public class Reachable
 {
 
-    /**
-     * Should work with ground items on top of objects
-     * Probably more accurate than OSBot's default
-     */
     public static boolean canReach(MethodProvider mp, Entity entity)
     {
         return canReach(mp, entity, true);
     }
 
-    /**
-     * Use this if object is walled in but tiles around it are still reachable to the target
-     * Example being the hopper at Motherlode Mine
-     */
-    public static boolean canReach2(MethodProvider mp, Entity entity)
+    public static boolean canReach(MethodProvider mp, Entity entity, boolean useTravel)
     {
-        return canReach(mp, entity, false);
-    }
-
-    private static boolean canReach(MethodProvider mp, Entity entity, boolean useTravel)
-    {
-        if (entity == null || !entity.exists() || mp == null || mp.myPosition() == null)
+        if (entity == null || !entity.exists())
         {
             return false;
         }
 
         final Area area = AreaUtils.getArea(entity);
+        return canReach(mp, area, useTravel);
+    }
+
+    public static boolean canReach(MethodProvider mp, Position position)
+    {
+        return canReach(mp, position, true);
+    }
+
+    public static boolean canReach(MethodProvider mp, Position position, boolean useTravel)
+    {
+        final Area area = new Area(position, position);
+        return canReach(mp, area, useTravel);
+    }
+
+    public static boolean canReach(MethodProvider mp, Area area)
+    {
+        return canReach(mp, area, true);
+    }
+
+    public static boolean canReach(MethodProvider mp, Area area, boolean useTravel)
+    {
+        if (area == null || mp == null || mp.myPosition() == null)
+        {
+            return false;
+        }
+
         final Position p2 = mp.myPosition();
         boolean canPath = Pathing.canPath(mp, p2, area);
 
