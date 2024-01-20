@@ -11,7 +11,7 @@ import org.osbot.rs07.script.Script;
 import org.osbot.rs07.script.ScriptManifest;
 import api.util.Sleep;
 
-@ScriptManifest(info = "", logo = "", name = "ExampleScript", author = "", version = 0.0)
+//@ScriptManifest(info = "", logo = "", name = "ExampleScript", author = "", version = 0.0)
 public class ExampleScript extends Script {
 
     private final Area chopArea = new Area(3206, 3238, 3184, 3252);

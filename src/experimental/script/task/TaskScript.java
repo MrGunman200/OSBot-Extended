@@ -1,6 +1,6 @@
-package experimental.api.script.task;
+package experimental.script.task;
 
-import experimental.api.script.LoopScript;
+import experimental.script.LoopScript;
 
 import java.util.ArrayList;
 

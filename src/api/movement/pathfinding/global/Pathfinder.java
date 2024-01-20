@@ -85,6 +85,10 @@ public class Pathfinder implements Callable<List<Position>>
             addNeighbor(node, x + 1, y + 1, plane);
         }
 
+        /*
+         * Check position for transports
+         * If transport present, add neighbor
+         */
     }
 
     private void addNeighbor(Node node, int x, int y, int z)

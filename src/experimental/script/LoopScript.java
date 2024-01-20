@@ -1,10 +1,10 @@
-package experimental.api.script;
+package experimental.script;
 
 import org.osbot.rs07.listener.GameTickListener;
-import experimental.api.provider.ExtraProvider;
+import experimental.provider.ExtraProvider;
 import api.util.Sleep;
-import experimental.api.provider.ExtraProviders;
-import experimental.api.provider.MethodProviders;
+import experimental.provider.ExtraProviders;
+import experimental.provider.MethodProviders;
 
 import java.awt.Graphics2D;
 
@@ -34,6 +34,14 @@ public abstract class LoopScript extends ExtraProvider {
         getBot().removeGameTickListener(gameTickListener);
         ExtraProviders.unregister(this);
         MethodProviders.unregister(this);
+    }
+
+    @Override
+    public void resume() {
+        ExtraProviders.register(getBot().getScriptExecutor(), this);
+        MethodProviders.register(getBot().getScriptExecutor(), this);
+        ExtraProviders.register(Thread.currentThread(), this);
+        MethodProviders.register(Thread.currentThread(), this);
     }
 
     @Override

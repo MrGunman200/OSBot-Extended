@@ -1,6 +1,6 @@
-package experimental.api.script.task;
+package experimental.script.task;
 
-import experimental.api.provider.ExtraProvider;
+import experimental.provider.ExtraProvider;
 
 public abstract class Task extends ExtraProvider {
 

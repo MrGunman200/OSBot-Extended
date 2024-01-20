@@ -1,6 +1,6 @@
 package api.util;
 
-import experimental.api.provider.ExtraProviders;
+import experimental.provider.ExtraProviders;
 
 import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;

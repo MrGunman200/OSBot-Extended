@@ -1,26 +1,27 @@
-package experimental;
+package examples;
 
-import api.invoking.InvokeHelper;
-import api.movement.Reachable;
+import experimental.api.Interaction;
+import experimental.api.Inventory;
+import experimental.api.Movement;
+import experimental.provider.InteractionType;
 import org.osbot.rs07.api.filter.Filter;
 import org.osbot.rs07.api.map.Area;
 import org.osbot.rs07.api.model.Item;
 import org.osbot.rs07.api.model.RS2Object;
 import org.osbot.rs07.api.ui.Skill;
-import experimental.api.script.LoopScript;
+import experimental.script.LoopScript;
 import api.util.Sleep;
 
-//@ScriptManifest(info = "", logo = "", name = "TestWCScript", author = "", version = 0.0)
-public class TestWCScript extends LoopScript {
+//@ScriptManifest(info = "", logo = "", name = "ExampleLoopedScript", author = "", version = 0.0)
+public class ExampleLoopedScript extends LoopScript {
 
     private final Area chopArea = new Area(3206, 3238, 3184, 3252);
     private final Filter<Item> axeFilter = i -> i != null && i.getName() != null && i.getName().contains("axe");
-    private InvokeHelper invokeHelper;
 
     public void onStart() throws InterruptedException {
         super.onStart();
-        invokeHelper = getHelpers().getInvokeHelper();
         getExtraBot().setFpsTarget(3);
+        getExtraBot().setInteractionType(InteractionType.INVOKE);
     }
 
     public int onLoop() throws InterruptedException {
@@ -46,7 +47,7 @@ public class TestWCScript extends LoopScript {
                 && o.getName() != null
                 && o.getName().equals(treeName)
                 && chopArea.contains(o.getPosition())
-                && Reachable.canReach(this, o)
+                && Movement.canReach(o)
         );
     }
 
@@ -61,14 +62,14 @@ public class TestWCScript extends LoopScript {
     private void dropLogs() {
         for (Item item : getInventory().getItems()) {
             if (item.getName().contains("ogs")) {
-                invokeHelper.invoke(item, "Drop");
+                Inventory.interact(item, "Drop");
             }
         }
     }
 
     private void chopTree(RS2Object tree) {
-        if (invokeHelper.invoke(tree, "Chop down")) {
-            Sleep.until(()-> !tree.exists(), ()-> myPlayer().isAnimating(), 1_800);
+        if (Interaction.interact(tree, "Chop down")) {
+            Sleep.untilTick(()-> !tree.exists(), ()-> myPlayer().isAnimating(), 1_800);
         }
     }
 

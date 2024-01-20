@@ -1,4 +1,4 @@
-package experimental.api.provider;
+package experimental.provider;
 
 import org.osbot.rs07.Bot;
 import org.osbot.rs07.script.MethodProvider;
