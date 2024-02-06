@@ -8,7 +8,6 @@ import org.osbot.rs07.api.model.Item;
 import org.osbot.rs07.api.model.RS2Object;
 import org.osbot.rs07.api.ui.Skill;
 import org.osbot.rs07.script.Script;
-import org.osbot.rs07.script.ScriptManifest;
 import api.util.Sleep;
 
 //@ScriptManifest(info = "", logo = "", name = "ExampleScript", author = "", version = 0.0)

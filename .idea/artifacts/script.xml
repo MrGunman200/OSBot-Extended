@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="script">
-    <output-path>$USER_HOME$/OSBot/Scripts</output-path>
-    <root id="archive" name="script.jar">
-      <element id="module-output" name="osbot-extended" />
-    </root>
-  </artifact>
-</component>

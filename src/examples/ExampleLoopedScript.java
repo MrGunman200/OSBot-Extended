@@ -1,15 +1,15 @@
 package examples;
 
-import experimental.api.Interaction;
-import experimental.api.Inventory;
-import experimental.api.Movement;
-import experimental.provider.InteractionType;
+import api.provider.InteractionType;
+import api.wrapper.extra.Interaction;
+import api.wrapper.extra.Inventory;
+import api.wrapper.extra.Movement;
 import org.osbot.rs07.api.filter.Filter;
 import org.osbot.rs07.api.map.Area;
 import org.osbot.rs07.api.model.Item;
 import org.osbot.rs07.api.model.RS2Object;
 import org.osbot.rs07.api.ui.Skill;
-import experimental.script.LoopScript;
+import api.script.LoopScript;
 import api.util.Sleep;
 
 //@ScriptManifest(info = "", logo = "", name = "ExampleLoopedScript", author = "", version = 0.0)
