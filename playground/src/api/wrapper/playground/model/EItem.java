@@ -6,6 +6,8 @@ import org.osbot.rs07.api.model.Item;
 import org.osbot.rs07.api.ui.RS2Widget;
 import org.osbot.rs07.script.MethodProvider;
 
+import java.util.Arrays;
+
 public class EItem extends Item implements EIdentifiable {
 
     public EItem(MethodProvider methods, int rootId, int id, int amount) {
@@ -24,6 +26,17 @@ public class EItem extends Item implements EIdentifiable {
         if (interactionType == InteractionType.DEFAULT) {
             return super.interact(actions);
         } else if (interactionType == InteractionType.INVOKE) {
+            if (actions != null
+                    && actions.length != 0
+                    && Arrays.stream(actions).anyMatch(i -> i.equalsIgnoreCase("use"))) {
+                if (ctx.getInventory().isItemSelected()) {
+                    final Item item = ctx.getInventory().getItem(ctx.getInventory().getSelectedItemIndex());
+                    return item != null && ctx.getHelpers().getInvokeHelper().invokeOn(item.getOwner(), this.getOwner());
+                }
+
+                return ctx.getHelpers().getInvokeHelper().invokeUse(this.getOwner());
+            }
+
             return ctx.getHelpers().getInvokeHelper().invoke(this, getActionIndex(actions));
         }
 
