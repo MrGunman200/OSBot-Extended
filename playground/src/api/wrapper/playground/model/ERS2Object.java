@@ -4,6 +4,7 @@ import api.provider.ExtraProvider;
 import api.provider.InteractionType;
 import org.osbot.rs07.Bot;
 import org.osbot.rs07.api.Client;
+import org.osbot.rs07.api.model.Item;
 import org.osbot.rs07.api.model.Model;
 import org.osbot.rs07.api.model.RS2Object;
 import org.osbot.rs07.script.MethodProvider;
@@ -24,6 +25,11 @@ public class ERS2Object implements RS2Object, EIdentifiable {
         if (interactionType == InteractionType.DEFAULT) {
             return RS2Object.super.interact(actions);
         } else if (interactionType == InteractionType.INVOKE) {
+            if (ctx.getInventory().isItemSelected()) {
+                final Item item = ctx.getInventory().getItemInSlot(ctx.getInventory().getSelectedItemIndex());
+                return item != null && ctx.getHelpers().getInvokeHelper().invokeOn(item.getOwner(), this);
+            }
+
             return ctx.getHelpers().getInvokeHelper().invoke(this, getActionIndex(actions));
         }
 

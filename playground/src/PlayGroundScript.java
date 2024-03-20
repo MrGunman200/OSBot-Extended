@@ -7,7 +7,7 @@ import java.util.Arrays;
 @ScriptManifest(
         info = "Attempts to Force Invokes Across the Entire Bot Tab",
         logo = "", name = "PlayGroundScript",
-        author = "Gunman", version = 1.000
+        author = "Gunman", version = 1.001
 )
 public class PlayGroundScript extends LoopScript {
 

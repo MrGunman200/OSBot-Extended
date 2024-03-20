@@ -2,6 +2,7 @@ package api.wrapper.playground.model;
 
 import api.provider.ExtraProvider;
 import api.provider.InteractionType;
+import org.osbot.rs07.api.model.Item;
 import org.osbot.rs07.api.model.NPC;
 
 public class ENpc extends NPC implements EIdentifiable {
@@ -21,6 +22,11 @@ public class ENpc extends NPC implements EIdentifiable {
         if (interactionType == InteractionType.DEFAULT) {
             return super.interact(actions);
         } else if (interactionType == InteractionType.INVOKE) {
+            if (ctx.getInventory().isItemSelected()) {
+                final Item item = ctx.getInventory().getItemInSlot(ctx.getInventory().getSelectedItemIndex());
+                return item != null && ctx.getHelpers().getInvokeHelper().invokeOn(item.getOwner(), this);
+            }
+
             return ctx.getHelpers().getInvokeHelper().invoke(this, getActionIndex(actions));
         }
 

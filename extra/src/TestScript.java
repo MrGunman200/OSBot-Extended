@@ -1,6 +1,7 @@
 import api.script.LoopScript;
 import org.osbot.rs07.api.model.RS2Object;
 import org.osbot.rs07.event.InteractionEvent;
+import org.osbot.rs07.script.ScriptManifest;
 
 import java.util.Arrays;
 
@@ -9,14 +10,6 @@ public class TestScript extends LoopScript {
 
     public int onLoop() throws InterruptedException {
         try {
-
-            getCamera().setUseMouse(true);
-
-            final RS2Object e = getObjects().closest("Tree");
-            final InteractionEvent event = new InteractionEvent(e, "Examine");
-            //e.interact("Examine");
-            event.setWalkTo(false);
-            execute(event).hasFinished();
 
         } catch (Exception e) {
             log(e);

@@ -4,6 +4,8 @@ import api.provider.ExtraProvider;
 import api.provider.InteractionType;
 import org.osbot.rs07.api.map.Position;
 import org.osbot.rs07.api.model.GroundItem;
+import org.osbot.rs07.api.model.Item;
+import org.osbot.rs07.api.ui.RS2Widget;
 
 public class EGroundItem extends GroundItem implements EIdentifiable {
 
@@ -27,6 +29,11 @@ public class EGroundItem extends GroundItem implements EIdentifiable {
         if (interactionType == InteractionType.DEFAULT) {
             return super.interact(actions);
         } else if (interactionType == InteractionType.INVOKE) {
+            if (ctx.getInventory().isItemSelected()) {
+                final Item item = ctx.getInventory().getItemInSlot(ctx.getInventory().getSelectedItemIndex());
+                return item != null && ctx.getHelpers().getInvokeHelper().invokeOn(item.getOwner(), this);
+            }
+
             return ctx.getHelpers().getInvokeHelper().invoke(this, getActionIndex(actions));
         }
 

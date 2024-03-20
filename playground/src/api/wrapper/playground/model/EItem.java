@@ -26,16 +26,17 @@ public class EItem extends Item implements EIdentifiable {
         if (interactionType == InteractionType.DEFAULT) {
             return super.interact(actions);
         } else if (interactionType == InteractionType.INVOKE) {
-            if (actions == null && ctx.getInventory().isItemSelected()) {
+            if ((actions == null || actions.length == 0) && ctx.getInventory().isItemSelected()) {
                 final Item item = ctx.getInventory().getItem(ctx.getInventory().getSelectedItemIndex());
                 return item != null && ctx.getHelpers().getInvokeHelper().invokeOn(item.getOwner(), this.getOwner());
             }
 
             if (actions != null
                     && actions.length != 0
-                    && Arrays.stream(actions).anyMatch(i -> i.equalsIgnoreCase("use"))) {
+                    && Arrays.stream(actions).anyMatch(i -> i.equalsIgnoreCase("use")
+                    || i.equalsIgnoreCase(""))) {
                 if (ctx.getInventory().isItemSelected()) {
-                    final Item item = ctx.getInventory().getItem(ctx.getInventory().getSelectedItemIndex());
+                    final Item item = ctx.getInventory().getItemInSlot(ctx.getInventory().getSelectedItemIndex());
                     return item != null && ctx.getHelpers().getInvokeHelper().invokeOn(item.getOwner(), this.getOwner());
                 }
 
