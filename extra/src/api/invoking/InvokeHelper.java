@@ -135,8 +135,8 @@ public class InvokeHelper extends MethodProvider {
         return invokeCloseButton() || invokeCloseWidget();
     }
 
-    public boolean invokeOn(RS2Widget widget, Entity entity) {
-        return invokeUse(widget) && invoke(entity, -5);
+    public boolean invokeOn(RS2Widget widget, Interactable interactable) {
+        return invokeUse(widget) && invoke(interactable, -5);
     }
 
     public boolean invokeOn(RS2Widget widget, RS2Widget otherWidget) {
@@ -155,7 +155,7 @@ public class InvokeHelper extends MethodProvider {
         return invoke(widget, opcode, id);
     }
 
-    public boolean invoke(RS2Widget widget, String action) {
+    private boolean invoke(RS2Widget widget, String action) {
         if (action.equalsIgnoreCase("use") || action.equalsIgnoreCase("cast")) {
             if (getInventory().isItemSelected() || getMagic().isSpellSelected()) {
                 return invokeOn(widget);
@@ -168,73 +168,91 @@ public class InvokeHelper extends MethodProvider {
         return hasActions(widgetActions) && invoke(widget, getIndexForAction(action, widgetActions));
     }
 
-    public boolean invoke(RS2Widget widget, int index) {
+    private boolean invoke(RS2Widget widget, int index) {
         final int opcode = getWidgetOpcode(widget, index);
         final int identifier = getWidgetIdentifier(widget, index);
         return invoke(widget, opcode, identifier);
     }
 
-    public boolean invoke(RS2Widget widget, int opcode, int identifier) {
+    private boolean invoke(RS2Widget widget, int opcode, int identifier) {
         final int param0 = widget.getThirdLevelId();
         final int param1 = widget.getId();
         return invoke(param0, param1, opcode, identifier, widget.getItemId());
     }
 
-    public boolean invoke(RS2Widget widget, int opcode, int identifier, int itemId) {
+    private boolean invoke(RS2Widget widget, int opcode, int identifier, int itemId) {
         final int param0 = widget.getThirdLevelId();
         final int param1 = widget.getId();
         return invoke(param0, param1, opcode, identifier, itemId);
     }
 
-    public boolean invoke(Item item, String action) {
+    private boolean invoke(Item item, String action) {
         return invoke(item.getOwner(), action);
     }
 
-    public boolean invoke(Item item, int opcode, int identifier) {
+    private boolean invoke(Item item, int opcode, int identifier) {
         return invoke(item.getOwner(), opcode, identifier);
     }
 
-    public boolean invoke(Item item, int index) {
+    private boolean invoke(Item item, int index) {
         return invoke(item.getOwner(), index);
     }
 
-    public boolean invoke(Entity entity, String action) {
-        if (entity instanceof RS2Object) {
-            return invoke((RS2Object) entity, action);
-        } else if (entity instanceof NPC) {
-            return invoke((NPC) entity, action);
-        } else if (entity instanceof Player) {
-            return invoke((Player) entity, action);
-        } else if (entity instanceof GroundItem) {
-            return invoke((GroundItem) entity, action);
+    public boolean invoke(Interactable interactable, String action) {
+        if (interactable == null) {
+            return false;
+        } else if (interactable instanceof RS2Object) {
+            return invoke((RS2Object) interactable, action);
+        } else if (interactable instanceof NPC) {
+            return invoke((NPC) interactable, action);
+        } else if (interactable instanceof Player) {
+            return invoke((Player) interactable, action);
+        } else if (interactable instanceof GroundItem) {
+            return invoke((GroundItem) interactable, action);
+        } else if (interactable instanceof Item) {
+            return invoke((Item) interactable, action);
+        } else if (interactable instanceof RS2Widget) {
+            return invoke((RS2Widget) interactable, action);
         }
 
         return false;
     }
 
-    public boolean invoke(Entity entity, int opcode, int identifier) {
-        if (entity instanceof RS2Object) {
-            return invoke((RS2Object) entity, opcode, identifier);
-        } else if (entity instanceof NPC) {
-            return invoke((NPC) entity, opcode, identifier);
-        } else if (entity instanceof Player) {
-            return invoke((Player) entity, opcode, identifier);
-        } else if (entity instanceof GroundItem) {
-            return invoke((GroundItem) entity, opcode, identifier);
+    public boolean invoke(Interactable interactable, int opcode, int identifier) {
+        if (interactable == null) {
+            return false;
+        } else if (interactable instanceof RS2Object) {
+            return invoke((RS2Object) interactable, opcode, identifier);
+        } else if (interactable instanceof NPC) {
+            return invoke((NPC) interactable, opcode, identifier);
+        } else if (interactable instanceof Player) {
+            return invoke((Player) interactable, opcode, identifier);
+        } else if (interactable instanceof GroundItem) {
+            return invoke((GroundItem) interactable, opcode, identifier);
+        } else if (interactable instanceof Item) {
+            return invoke((Item) interactable, opcode, identifier);
+        } else if (interactable instanceof RS2Widget) {
+            return invoke((RS2Widget) interactable, opcode, identifier);
         }
 
         return false;
     }
 
-    public boolean invoke(Entity entity, int index) {
-        if (entity instanceof RS2Object) {
-            return invoke((RS2Object) entity, index);
-        } else if (entity instanceof NPC) {
-            return invoke((NPC) entity, index);
-        } else if (entity instanceof Player) {
-            return invoke((Player) entity, index);
-        } else if (entity instanceof GroundItem) {
-            return invoke((GroundItem) entity, index);
+    public boolean invoke(Interactable interactable, int index) {
+        if (interactable == null) {
+            return false;
+        } else if (interactable instanceof RS2Object) {
+            return invoke((RS2Object) interactable, index);
+        } else if (interactable instanceof NPC) {
+            return invoke((NPC) interactable, index);
+        } else if (interactable instanceof Player) {
+            return invoke((Player) interactable, index);
+        } else if (interactable instanceof GroundItem) {
+            return invoke((GroundItem) interactable, index);
+        } else if (interactable instanceof Item) {
+            return invoke((Item) interactable, index);
+        } else if (interactable instanceof RS2Widget) {
+            return invoke((RS2Widget) interactable, index);
         }
 
         return false;

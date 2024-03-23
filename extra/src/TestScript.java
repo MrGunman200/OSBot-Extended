@@ -1,7 +1,4 @@
 import api.script.LoopScript;
-import org.osbot.rs07.api.model.RS2Object;
-import org.osbot.rs07.event.InteractionEvent;
-import org.osbot.rs07.script.ScriptManifest;
 
 import java.util.Arrays;
 
