@@ -2,7 +2,13 @@ package api.invoking;
 
 import org.osbot.rs07.api.map.Area;
 import org.osbot.rs07.api.map.Position;
-import org.osbot.rs07.api.model.*;
+import org.osbot.rs07.api.model.Entity;
+import org.osbot.rs07.api.model.GroundItem;
+import org.osbot.rs07.api.model.Interactable;
+import org.osbot.rs07.api.model.Item;
+import org.osbot.rs07.api.model.NPC;
+import org.osbot.rs07.api.model.Player;
+import org.osbot.rs07.api.model.RS2Object;
 import org.osbot.rs07.api.ui.RS2Widget;
 import org.osbot.rs07.script.MethodProvider;
 
@@ -30,21 +36,21 @@ public class InvokeHelper extends MethodProvider {
         sendClick = value;
     }
 
-    private void fireEvent(int event) {
-        final int screenX = 0;
-        final int screenY = 0;
+    private void fireEvent(int event, int x, int y, boolean rightClick) {
         getBot().getMouseEventHandler().generateBotMouseEvent(
                 event,
                 System.currentTimeMillis(),
-                MouseEvent.BUTTON3_DOWN_MASK,
-                screenX, screenY,
-                1, false, MouseEvent.BUTTON3, true);
+                rightClick ? MouseEvent.BUTTON3_DOWN_MASK : MouseEvent.BUTTON1_DOWN_MASK,
+                x, y,
+                1, false,
+                rightClick ? MouseEvent.BUTTON3 : MouseEvent.BUTTON1,
+                true);
     }
 
-    private void sendClick() {
-        fireEvent(MouseEvent.MOUSE_PRESSED);
-        fireEvent(MouseEvent.MOUSE_RELEASED);
-        fireEvent(MouseEvent.MOUSE_CLICKED);
+    public void sendClick(int x, int y, boolean rightClick) {
+        fireEvent(MouseEvent.MOUSE_PRESSED, x, y, rightClick);
+        fireEvent(MouseEvent.MOUSE_RELEASED, x, y, rightClick);
+        fireEvent(MouseEvent.MOUSE_CLICKED, x, y, rightClick);
     }
 
     // Action and Target Name are irrelevant (Client sided)
@@ -65,7 +71,7 @@ public class InvokeHelper extends MethodProvider {
     public boolean invoke(int param0, int param1, int opcode, int id, int itemId, String action, String targetName, int screenX, int screenY) {
         try {
             if (isSendClick()) {
-                sendClick();
+                sendClick(0, 0, true);
             }
 
             getMenuAPI().invokeMenuAction(param0, param1, opcode, id, itemId, action, targetName, screenX, screenY);
@@ -81,7 +87,7 @@ public class InvokeHelper extends MethodProvider {
     public boolean invokeWalking(int sceneX, int sceneY) {
         try {
             if (isSendClick()) {
-                sendClick();
+                sendClick(0, 0, true);
             }
 
             getClient().accessor.invokeWalking(sceneX, sceneY);
@@ -135,15 +141,19 @@ public class InvokeHelper extends MethodProvider {
         return invokeCloseButton() || invokeCloseWidget();
     }
 
+    public boolean invokeOn(Interactable interactable) {
+        return invoke(interactable, -5);
+    }
+
+    public boolean invokeOn(Item item, Interactable interactable) {
+        return item != null && invokeOn(item.getOwner(), interactable);
+    }
+
     public boolean invokeOn(RS2Widget widget, Interactable interactable) {
-        return invokeUse(widget) && invoke(interactable, -5);
+        return invokeUse(widget) && invokeOn(interactable);
     }
 
-    public boolean invokeOn(RS2Widget widget, RS2Widget otherWidget) {
-        return invokeUse(widget) && invokeOn(otherWidget);
-    }
-
-    public boolean invokeOn(RS2Widget otherWidget) {
+    private boolean invokeOn(RS2Widget otherWidget) {
         final int id = 0;
         final int opcode = MenuAction.WIDGET_TARGET_ON_WIDGET.getId();
         return invoke(otherWidget, opcode, id);
@@ -169,6 +179,10 @@ public class InvokeHelper extends MethodProvider {
     }
 
     private boolean invoke(RS2Widget widget, int index) {
+        if (index == -5) {
+            return invokeOn(widget);
+        }
+
         final int opcode = getWidgetOpcode(widget, index);
         final int identifier = getWidgetIdentifier(widget, index);
         return invoke(widget, opcode, identifier);
