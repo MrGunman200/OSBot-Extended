@@ -484,14 +484,18 @@ public class InvokeHelper extends MethodProvider {
     }
 
     public int getWidgetOpcode(RS2Widget widget, int index) {
-        return getWidgetOpcode(widget.getType(), index, widget.getSelectedActionName());
+        return getWidgetOpcode(widget, index, widget.getType());
     }
 
-    public int getWidgetOpcode(int widgetType, int index, String selectedActionName) {
+    public int getWidgetOpcode(RS2Widget widget, int index, int widgetType) {
         switch (widgetType) {
             case WidgetType.GRAPHIC:
                 return index < 6 ? MenuAction.CC_OP.getId() : MenuAction.CC_OP_LOW_PRIORITY.getId();
             case WidgetType.TEXT:
+                if (widget.getInteractActions() != null) {
+                    return index < 6 ? MenuAction.CC_OP.getId() : MenuAction.CC_OP_LOW_PRIORITY.getId();
+                }
+
                 return MenuAction.WIDGET_CONTINUE.getId();
             default:
                 return MenuAction.CC_OP.getId();
