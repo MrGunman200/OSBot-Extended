@@ -101,18 +101,34 @@ public class InvokeHelper extends MethodProvider {
     }
 
     public boolean invokeWalking(Entity entity, int radius) {
+        if (entity == null) {
+            return false;
+        }
+
         return invokeWalking(entity.getArea(radius));
     }
 
     public boolean invokeWalking(Entity entity) {
+        if (entity == null) {
+            return false;
+        }
+
         return invokeWalking(entity.getPosition());
     }
 
     public boolean invokeWalking(Area area) {
+        if (area == null) {
+            return false;
+        }
+
         return invokeWalking(area.getRandomPosition());
     }
 
     public boolean invokeWalking(Position position) {
+        if (position == null) {
+            return false;
+        }
+
         final int sceneX = position.getLocalX(getBot());
         final int sceneY = position.getLocalY(getBot());
         return invokeWalking(sceneX, sceneY);

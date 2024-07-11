@@ -2,13 +2,7 @@ package api.invoking;
 
 import org.osbot.rs07.api.map.Area;
 import org.osbot.rs07.api.map.Position;
-import org.osbot.rs07.api.model.Entity;
-import org.osbot.rs07.api.model.GroundItem;
-import org.osbot.rs07.api.model.Interactable;
-import org.osbot.rs07.api.model.Item;
-import org.osbot.rs07.api.model.NPC;
-import org.osbot.rs07.api.model.Player;
-import org.osbot.rs07.api.model.RS2Object;
+import org.osbot.rs07.api.model.*;
 import org.osbot.rs07.api.ui.RS2Widget;
 import org.osbot.rs07.script.MethodProvider;
 
@@ -101,18 +95,34 @@ public class InvokeHelper extends MethodProvider {
     }
 
     public boolean invokeWalking(Entity entity, int radius) {
+        if (entity == null) {
+            return false;
+        }
+
         return invokeWalking(entity.getArea(radius));
     }
 
     public boolean invokeWalking(Entity entity) {
+        if (entity == null) {
+            return false;
+        }
+
         return invokeWalking(entity.getPosition());
     }
 
     public boolean invokeWalking(Area area) {
+        if (area == null) {
+            return false;
+        }
+
         return invokeWalking(area.getRandomPosition());
     }
 
     public boolean invokeWalking(Position position) {
+        if (position == null) {
+            return false;
+        }
+
         final int sceneX = position.getLocalX(getBot());
         final int sceneY = position.getLocalY(getBot());
         return invokeWalking(sceneX, sceneY);
