@@ -67,7 +67,7 @@ public class InvokeInteractionEvent extends InteractionEvent {
         parseMouseDestination(mouseDestination);
         checkBadWidget();
 
-        if (actions == null || actions.length == 0) {
+        if (actions == null || actions.length == 0 || getBot().isMirrorMode()) {
             useMouse = true;
         }
 
