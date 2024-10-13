@@ -90,7 +90,7 @@ public class InvokeHelper extends MethodProvider {
                 sendClick(0, 0, true);
             }
 
-            getClient().accessor.invokeWalking(sceneX, sceneY);
+            getMap().invokeWalking(sceneX, sceneY);
             return true;
         } catch (Exception | Error e) {
             e.printStackTrace();
