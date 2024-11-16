@@ -2,14 +2,27 @@ package api.invoking;
 
 import org.osbot.rs07.api.map.Area;
 import org.osbot.rs07.api.map.Position;
-import org.osbot.rs07.api.model.*;
+import org.osbot.rs07.api.model.Entity;
+import org.osbot.rs07.api.model.GroundItem;
+import org.osbot.rs07.api.model.Interactable;
+import org.osbot.rs07.api.model.Item;
+import org.osbot.rs07.api.model.Model;
+import org.osbot.rs07.api.model.NPC;
+import org.osbot.rs07.api.model.Player;
+import org.osbot.rs07.api.model.RS2Object;
 import org.osbot.rs07.api.ui.RS2Widget;
 import org.osbot.rs07.script.MethodProvider;
 
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
+import java.util.Random;
 
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public class InvokeHelper extends MethodProvider {
+
+    private boolean sendClick = true;
+    private Rectangle hitBox = null;
+    private InvokeBehavior invokeBehavior = InvokeBehavior.HIT_BOX;
 
     public InvokeHelper(MethodProvider context) {
         this.exchangeContext(context.getBot());
@@ -20,14 +33,22 @@ public class InvokeHelper extends MethodProvider {
         this.sendClick = sendClick;
     }
 
-    private boolean sendClick = true;
-
     public boolean isSendClick() {
         return sendClick;
     }
 
-    public void setSendClick(boolean value) {
+    public InvokeHelper setSendClick(boolean value) {
         sendClick = value;
+        return this;
+    }
+
+    public InvokeBehavior getInvokeBehavior() {
+        return invokeBehavior;
+    }
+
+    public InvokeHelper setInvokeBehavior(InvokeBehavior invokeBehavior) {
+        this.invokeBehavior = invokeBehavior;
+        return this;
     }
 
     private void fireEvent(int event, int x, int y, boolean rightClick) {
@@ -42,9 +63,24 @@ public class InvokeHelper extends MethodProvider {
     }
 
     public void sendClick(int x, int y, boolean rightClick) {
+        hitBox = null;
         fireEvent(MouseEvent.MOUSE_PRESSED, x, y, rightClick);
         fireEvent(MouseEvent.MOUSE_RELEASED, x, y, rightClick);
         fireEvent(MouseEvent.MOUSE_CLICKED, x, y, rightClick);
+    }
+
+    public void handleMouse() {
+        if (isSendClick()) {
+            if (getInvokeBehavior() == InvokeBehavior.HIT_BOX) {
+                final Random r = new Random();
+                final boolean canHitbox = hitBox != null && !hitBox.isEmpty();
+                final int x = canHitbox ? hitBox.x + r.nextInt(hitBox.width) : r.nextInt(765);
+                final int y = canHitbox ? hitBox.y + r.nextInt(hitBox.height) : r.nextInt(503);
+                sendClick(x, y, true);
+            } else if (getInvokeBehavior() == InvokeBehavior.STATIC) {
+                sendClick(0, 0, true);
+            }
+        }
     }
 
     // Action and Target Name are irrelevant (Client sided)
@@ -64,10 +100,7 @@ public class InvokeHelper extends MethodProvider {
      */
     public boolean invoke(int param0, int param1, int opcode, int id, int itemId, String action, String targetName, int screenX, int screenY) {
         try {
-            if (isSendClick()) {
-                sendClick(0, 0, true);
-            }
-
+            handleMouse();
             getMenuAPI().invokeMenuAction(param0, param1, opcode, id, itemId, action, targetName, screenX, screenY);
             return true;
         } catch (Exception | Error e) {
@@ -80,10 +113,7 @@ public class InvokeHelper extends MethodProvider {
 
     public boolean invokeWalking(int sceneX, int sceneY) {
         try {
-            if (isSendClick()) {
-                sendClick(0, 0, true);
-            }
-
+            handleMouse();
             getMap().invokeWalking(sceneX, sceneY);
             return true;
         } catch (Exception | Error e) {
@@ -225,18 +255,21 @@ public class InvokeHelper extends MethodProvider {
     public boolean invoke(Interactable interactable, String action) {
         if (interactable == null) {
             return false;
-        } else if (interactable instanceof RS2Object) {
-            return invoke((RS2Object) interactable, action);
-        } else if (interactable instanceof NPC) {
-            return invoke((NPC) interactable, action);
-        } else if (interactable instanceof Player) {
-            return invoke((Player) interactable, action);
-        } else if (interactable instanceof GroundItem) {
-            return invoke((GroundItem) interactable, action);
-        } else if (interactable instanceof Item) {
-            return invoke((Item) interactable, action);
-        } else if (interactable instanceof RS2Widget) {
-            return invoke((RS2Widget) interactable, action);
+        } else {
+            setHitBox(interactable);
+            if (interactable instanceof RS2Object) {
+                return invoke((RS2Object) interactable, action);
+            } else if (interactable instanceof NPC) {
+                return invoke((NPC) interactable, action);
+            } else if (interactable instanceof Player) {
+                return invoke((Player) interactable, action);
+            } else if (interactable instanceof GroundItem) {
+                return invoke((GroundItem) interactable, action);
+            } else if (interactable instanceof Item) {
+                return invoke((Item) interactable, action);
+            } else if (interactable instanceof RS2Widget) {
+                return invoke((RS2Widget) interactable, action);
+            }
         }
 
         return false;
@@ -245,18 +278,21 @@ public class InvokeHelper extends MethodProvider {
     public boolean invoke(Interactable interactable, int opcode, int identifier) {
         if (interactable == null) {
             return false;
-        } else if (interactable instanceof RS2Object) {
-            return invoke((RS2Object) interactable, opcode, identifier);
-        } else if (interactable instanceof NPC) {
-            return invoke((NPC) interactable, opcode, identifier);
-        } else if (interactable instanceof Player) {
-            return invoke((Player) interactable, opcode, identifier);
-        } else if (interactable instanceof GroundItem) {
-            return invoke((GroundItem) interactable, opcode, identifier);
-        } else if (interactable instanceof Item) {
-            return invoke((Item) interactable, opcode, identifier);
-        } else if (interactable instanceof RS2Widget) {
-            return invoke((RS2Widget) interactable, opcode, identifier);
+        } else {
+            setHitBox(interactable);
+            if (interactable instanceof RS2Object) {
+                return invoke((RS2Object) interactable, opcode, identifier);
+            } else if (interactable instanceof NPC) {
+                return invoke((NPC) interactable, opcode, identifier);
+            } else if (interactable instanceof Player) {
+                return invoke((Player) interactable, opcode, identifier);
+            } else if (interactable instanceof GroundItem) {
+                return invoke((GroundItem) interactable, opcode, identifier);
+            } else if (interactable instanceof Item) {
+                return invoke((Item) interactable, opcode, identifier);
+            } else if (interactable instanceof RS2Widget) {
+                return invoke((RS2Widget) interactable, opcode, identifier);
+            }
         }
 
         return false;
@@ -265,21 +301,41 @@ public class InvokeHelper extends MethodProvider {
     public boolean invoke(Interactable interactable, int index) {
         if (interactable == null) {
             return false;
-        } else if (interactable instanceof RS2Object) {
-            return invoke((RS2Object) interactable, index);
-        } else if (interactable instanceof NPC) {
-            return invoke((NPC) interactable, index);
-        } else if (interactable instanceof Player) {
-            return invoke((Player) interactable, index);
-        } else if (interactable instanceof GroundItem) {
-            return invoke((GroundItem) interactable, index);
-        } else if (interactable instanceof Item) {
-            return invoke((Item) interactable, index);
-        } else if (interactable instanceof RS2Widget) {
-            return invoke((RS2Widget) interactable, index);
+        } else {
+            setHitBox(interactable);
+            if (interactable instanceof RS2Object) {
+                return invoke((RS2Object) interactable, index);
+            } else if (interactable instanceof NPC) {
+                return invoke((NPC) interactable, index);
+            } else if (interactable instanceof Player) {
+                return invoke((Player) interactable, index);
+            } else if (interactable instanceof GroundItem) {
+                return invoke((GroundItem) interactable, index);
+            } else if (interactable instanceof Item) {
+                return invoke((Item) interactable, index);
+            } else if (interactable instanceof RS2Widget) {
+                return invoke((RS2Widget) interactable, index);
+            }
         }
 
         return false;
+    }
+
+    public void setHitBox(Interactable interactable) {
+        if (interactable instanceof Entity) {
+            final Entity e = (Entity) interactable;
+            final Model m = e.getModel();
+            hitBox = m.getBoundingBox(e.getGridX(), e.getGridY(), e.getZ());
+        } else if (interactable instanceof Item) {
+            final Item i = (Item) interactable;
+            final RS2Widget w = i.getOwner();
+            if (w != null) {
+                hitBox = w.getBounds();
+            }
+        } else if (interactable instanceof RS2Widget) {
+            final RS2Widget w = (RS2Widget) interactable;
+            hitBox = w.getBounds();
+        }
     }
 
     private boolean invoke(GroundItem groundItem, String action) {
@@ -522,6 +578,11 @@ public class InvokeHelper extends MethodProvider {
         }
 
         return index + 1;
+    }
+
+    public enum InvokeBehavior {
+        HIT_BOX(),
+        STATIC(),
     }
 
 }
