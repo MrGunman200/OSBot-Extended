@@ -339,10 +339,6 @@ public class InvokeHelper extends MethodProvider {
     }
 
     private boolean invoke(GroundItem groundItem, String action) {
-        if (action.equalsIgnoreCase("use") || action.equalsIgnoreCase("cast")) {
-            return invoke(groundItem, -5);
-        }
-
         return invoke(groundItem, getIndexForAction(action, groundItem.getActions()));
     }
 
@@ -383,15 +379,6 @@ public class InvokeHelper extends MethodProvider {
     }
 
     private boolean invoke(Player player, String action) {
-        // These actions are independent of getActions
-        if (action.equalsIgnoreCase("trade")) {
-            return invoke(player, -2);
-        } else if (action.equalsIgnoreCase("follow")) {
-            return invoke(player, -3);
-        } else if (action.equalsIgnoreCase("use") || action.equalsIgnoreCase("cast")) {
-            return invoke(player, -5);
-        }
-
         return invoke(player, getIndexForAction(action, player.getActions()));
     }
 
@@ -445,10 +432,6 @@ public class InvokeHelper extends MethodProvider {
     }
 
     private boolean invoke(NPC npc, String action) {
-        if (action.equalsIgnoreCase("use") || action.equalsIgnoreCase("cast")) {
-            return invoke(npc, -5);
-        }
-
         return invoke(npc, getIndexForAction(action, npc.getActions()));
     }
 
@@ -487,10 +470,6 @@ public class InvokeHelper extends MethodProvider {
     }
 
     private boolean invoke(RS2Object object, String action) {
-        if (action.equalsIgnoreCase("use") || action.equalsIgnoreCase("cast")) {
-            return invoke(object, -5);
-        }
-
         return invoke(object, getIndexForAction(action, object.getActions()));
     }
 
@@ -544,6 +523,14 @@ public class InvokeHelper extends MethodProvider {
                     }
                 }
             }
+        }
+
+        if (targetAction.equalsIgnoreCase("trade")) {
+            return -2;
+        } else if (targetAction.equalsIgnoreCase("follow")) {
+            return -3;
+        } else if (targetAction.equalsIgnoreCase("use") || targetAction.equalsIgnoreCase("cast")) {
+            return -5;
         }
 
         throw new IndexOutOfBoundsException("Action index couldn't be found");
