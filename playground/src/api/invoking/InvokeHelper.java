@@ -325,13 +325,11 @@ public class InvokeHelper extends MethodProvider {
         if (interactable instanceof Entity) {
             final Entity e = (Entity) interactable;
             final Model m = e.getModel();
-            hitBox = m.getBoundingBox(e.getGridX(), e.getGridY(), e.getZ());
+            hitBox = m != null ? m.getBoundingBox(e.getGridX(), e.getGridY(), e.getZ()) : null;
         } else if (interactable instanceof Item) {
             final Item i = (Item) interactable;
             final RS2Widget w = i.getOwner();
-            if (w != null) {
-                hitBox = w.getBounds();
-            }
+            hitBox = w != null ? w.getBounds() : null;
         } else if (interactable instanceof RS2Widget) {
             final RS2Widget w = (RS2Widget) interactable;
             hitBox = w.getBounds();
