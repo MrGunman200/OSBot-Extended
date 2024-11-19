@@ -514,6 +514,12 @@ public class InvokeHelper extends MethodProvider {
     }
 
     public int getIndexForAction(String targetAction, String[] actions) throws IndexOutOfBoundsException {
+        if (targetAction.equalsIgnoreCase("use") || targetAction.equalsIgnoreCase("cast")) {
+            if (getInventory().isItemSelected() || getMagic().isSpellSelected()) {
+                return -5;
+            }
+        }
+
         if (hasActions(actions)) {
             for (int i = 0; i < actions.length; i++) {
                 final String action = actions[i];
@@ -529,8 +535,6 @@ public class InvokeHelper extends MethodProvider {
             return -2;
         } else if (targetAction.equalsIgnoreCase("follow")) {
             return -3;
-        } else if (targetAction.equalsIgnoreCase("use") || targetAction.equalsIgnoreCase("cast")) {
-            return -5;
         }
 
         throw new IndexOutOfBoundsException("Action index couldn't be found");
