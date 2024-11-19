@@ -73,7 +73,8 @@ public class InvokeHelper extends MethodProvider {
         if (isSendClick()) {
             if (getInvokeBehavior() == InvokeBehavior.HIT_BOX) {
                 final Random r = new Random();
-                final boolean canHitbox = hitBox != null && !hitBox.isEmpty();
+                final boolean canHitbox = hitBox != null && !hitBox.isEmpty() && hitBox.x < 10_000 && hitBox.y < 10_000
+                        && hitBox.width < 10_000 && hitBox.height < 10_000;
                 final int x = canHitbox ? hitBox.x + r.nextInt(hitBox.width) : r.nextInt(765);
                 final int y = canHitbox ? hitBox.y + r.nextInt(hitBox.height) : r.nextInt(503);
                 sendClick(x, y, true);
