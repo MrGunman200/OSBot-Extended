@@ -23,7 +23,7 @@ public class InvokeProvider extends InteractionProvider {
     }
 
     public InvokeProvider(MethodProvider ctx, boolean useInvoke) {
-        this(new InvokeHelper(ctx, useInvoke));
+        this(new InvokeHelper(ctx), useInvoke);
     }
 
     public InvokeProvider(InvokeHelper invokeHelper) {
