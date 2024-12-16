@@ -115,10 +115,8 @@ public class InvokeHelper extends MethodProvider {
     public boolean invokeWalking(int sceneX, int sceneY) {
         try {
             // I think if a click is processed right as this is called, it will change the walk destination to the tile clicked
-            getBot().onGameThread(()-> {
-                handleMouse();
-                getMap().invokeWalking(sceneX, sceneY);
-            });
+            getBot().onGameThread(()-> handleMouse());
+            getMap().invokeWalking(sceneX, sceneY);
             return true;
         } catch (Exception | Error e) {
             e.printStackTrace();
