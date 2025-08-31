@@ -216,6 +216,12 @@ public class InvokeHelper extends MethodProvider {
             return invokeUse(widget);
         }
 
+        final int subIdentifier = getWidgetSubMenuIdentifier(widget, action);
+
+        if (subIdentifier != -1) {
+            return invoke(widget, MenuAction.CC_OP_LOW_PRIORITY.getId(), subIdentifier);
+        }
+
         final String[] widgetActions = widget.getInteractActions();
         return hasActions(widgetActions) && invoke(widget, getIndexForAction(action, widgetActions));
     }
@@ -569,6 +575,33 @@ public class InvokeHelper extends MethodProvider {
         }
 
         return index + 1;
+    }
+
+    public int getWidgetSubMenuIdentifier(RS2Widget widget, String action) {
+        if (widget == null) {
+            return -1;
+        }
+
+        final String[][] menuOptions = widget.accessor.getSubmenuOptions();
+
+        if (menuOptions == null) {
+            return -1;
+        }
+
+        for (int i = 0; i < menuOptions.length; i++) {
+            if (menuOptions[i] == null) {
+                continue;
+            }
+
+            for (int k = 0; k < menuOptions[i].length; k++) {
+                final String subAction = menuOptions[i][k];
+                if (subAction != null && !subAction.isEmpty() && subAction.equalsIgnoreCase(action)) {
+                    return 1 + i << 16 | k + 1;
+                }
+            }
+        }
+
+        return -1;
     }
 
     public enum InvokeBehavior {
