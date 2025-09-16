@@ -596,7 +596,7 @@ public class InvokeHelper extends MethodProvider {
             for (int k = 0; k < menuOptions[i].length; k++) {
                 final String subAction = menuOptions[i][k];
                 if (subAction != null && !subAction.isEmpty() && subAction.equalsIgnoreCase(action)) {
-                    return 1 + i << 16 | k + 1;
+                    return 1 + k << 16 | i + 1;
                 }
             }
         }
